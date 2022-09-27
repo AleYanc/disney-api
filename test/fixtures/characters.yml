@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+rayo:
+  name: Rayo McQUeen
+  age: 30
+  weight: 600.7
+  history: 'Rayo McQueen, es un automóvil de carreras prosopopéyico protagonista de las películas producidas por Pixar: Cars, Cars 2 y Cars 3, así como en los cortos de televisión Cars Toons, creado por John Lasseter para la última producción de Pixar antes de entrar a formar parte de Disney.' 
+  image: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fes.wikipedia.org%2Fwiki%2FRayo_McQueen&psig=AOvVaw1QYY6TWtw6UwH1HQaEHKj2&ust=1664401151612000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCJjM_Mz3tfoCFQAAAAAdAAAAABAD'
+  studios: pixar
+
+mate:
+  name: MyString
+  age: 30
+  weight: 600.7
+  history: "Tom Mate (Tow Mater en inglés), es uno de los personajes principales en Cars y sus secuelas, Cars 2 y Cars 3. También hace aparición en Mater's Tall Tales y en otros medios relacionados con Cars."
+  image: "https://commons.wikimedia.org/wiki/File:Tow_Mater_(265156851).jpg"
+  studios: pixar

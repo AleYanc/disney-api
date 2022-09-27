@@ -1,0 +1,6 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+pixar:
+  name: Pixar
+  image: "https://commons.wikimedia.org/wiki/File:Pixaranimationstudios.jpg"
+  foundation_date: 1986-02-03
