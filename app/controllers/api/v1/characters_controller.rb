@@ -1,6 +1,6 @@
 class Api::V1::CharactersController < ApplicationController
   before_action :set_character, only: [:show, :update, :destroy]
-  before_action :authenticate_user, only: [:create, :upate, :destroy]
+  before_action :authenticate_user
 
   has_scope :by_name 
   has_scope :by_age, using: [:from, :to]
