@@ -16,6 +16,10 @@ class GenreTest < ActiveSupport::TestCase
   end
 
   test "#productions" do
-    assert_equal 1, @genre.productions.size
+    assert_equal 2, @genre.productions.size
+  end
+
+  test "scope by name" do
+    assert_includes Genre.by_name('Animacion'), genres(:animacion)
   end
 end

@@ -37,4 +37,17 @@ class ProductionTest < ActiveSupport::TestCase
   test "#studios" do
     assert_equal 1, @prod.studios.size
   end
+
+  test "title scope" do
+    assert_includes Production.title('Cars'), productions(:cars)
+    refute_includes Production.title('Cars 2'), productions(:cars)
+  end
+
+  test "genre scope" do
+    animacion = genres(:animacion)
+    
+    assert_includes Production.genre((animacion.id).to_s), productions(:toy_story)
+    assert_includes Production.genre((animacion.id).to_s), productions(:cars)
+    assert_equal 2, Production.genre((animacion.id).to_s).size
+  end
 end

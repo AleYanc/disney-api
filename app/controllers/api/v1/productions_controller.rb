@@ -1,4 +1,4 @@
-class ProductionsController < ApplicationController
+class Api::V1::ProductionsController < ApplicationController
   before_action :set_production, only: [:show, :update, :destroy]
 
   # GET /productions
@@ -18,7 +18,7 @@ class ProductionsController < ApplicationController
     @production = Production.new(production_params)
 
     if @production.save
-      render json: @production, status: :created, location: @production
+      render json: @production, status: :created location: @user
     else
       render json: @production.errors, status: :unprocessable_entity
     end

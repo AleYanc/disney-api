@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
-  resources :users
-  resources :studios
-  resources :genres
-  resources :productions
-  resources :characters
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  namespace :api do
+    namespace :v1 do
+
+      # Basic routes
+      resources :users
+      resources :studios
+      resources :genres
+      resources :productions
+      resources :characters
+
+      #Auth routes
+      post "auth", to: "auth#create", as: "auth"
+    end
+  end
 end

@@ -2,7 +2,7 @@ require "test_helper"
 
 class ProductionsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @production = productions(:one)
+    @production = productions(:cars)
   end
 
   test "should get index" do

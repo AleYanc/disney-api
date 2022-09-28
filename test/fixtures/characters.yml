@@ -9,9 +9,9 @@ rayo:
   studios: pixar
 
 mate:
-  name: MyString
-  age: 30
-  weight: 600.7
+  name: Mate
+  age: 35
+  weight: 780.3
   history: "Tom Mate (Tow Mater en inglés), es uno de los personajes principales en Cars y sus secuelas, Cars 2 y Cars 3. También hace aparición en Mater's Tall Tales y en otros medios relacionados con Cars."
   image: "https://commons.wikimedia.org/wiki/File:Tow_Mater_(265156851).jpg"
   studios: pixar

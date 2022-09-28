@@ -2,7 +2,7 @@ require "test_helper"
 
 class StudiosControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @studio = studios(:one)
+    @studio = studios(:pixar)
   end
 
   test "should get index" do

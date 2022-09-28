@@ -1,4 +1,4 @@
-class StudiosController < ApplicationController
+class Api::V1::StudiosController < ApplicationController
   before_action :set_studio, only: [:show, :update, :destroy]
 
   # GET /studios
@@ -18,7 +18,7 @@ class StudiosController < ApplicationController
     @studio = Studio.new(studio_params)
 
     if @studio.save
-      render json: @studio, status: :created, location: @studio
+      render json: @studio, status: :created
     else
       render json: @studio.errors, status: :unprocessable_entity
     end

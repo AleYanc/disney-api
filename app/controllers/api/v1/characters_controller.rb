@@ -1,5 +1,11 @@
-class CharactersController < ApplicationController
+class Api::V1::CharactersController < ApplicationController
   before_action :set_character, only: [:show, :update, :destroy]
+  before_action :authenticate_user, only: [:create, :upate, :destroy]
+
+  has_scope :by_name 
+  has_scope :by_age, using: [:from, :to]
+  has_scope :by_weight, using: [:from, :to]
+  has_scope :by_production
 
   # GET /characters
   def index
@@ -18,7 +24,7 @@ class CharactersController < ApplicationController
     @character = Character.new(character_params)
 
     if @character.save
-      render json: @character, status: :created, location: @character
+      render json: @character, status: :created
     else
       render json: @character.errors, status: :unprocessable_entity
     end
