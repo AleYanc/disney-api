@@ -1,16 +1,20 @@
 class Api::V1::GenresController < ApplicationController
   before_action :set_genre, only: [:show, :update, :destroy]
+  before_action :authenticate_user
+  MAX_PAGINATION_LIMIT = 10
+
+  has_scope :by_name
 
   # GET /genres
   def index
-    @genres = Genre.all
+    @genres = (apply_scopes(Genre.limit(limit).offset(params[:offset]))).order(created_at: order)
 
-    render json: @genres
+    render json: GenresSerializer.new(@genres).serializable_hash.to_json
   end
 
   # GET /genres/1
   def show
-    render json: @genre
+    render json: GenresSerializer.new(@genre).serializable_hash.to_json
   end
 
   # POST /genres
@@ -39,13 +43,24 @@ class Api::V1::GenresController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_genre
-      @genre = Genre.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def genre_params
-      params.require(:genre).permit(:name, :image)
-    end
+  def limit
+    [params.fetch(:limit, MAX_PAGINATION_LIMIT).to_i].min
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_genre
+    @genre = Genre.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: {error: "No se encuentra el genero con ID: '#{params[:id]}'"}
+  end
+
+  # Only allow a list of trusted parameters through.
+  def genre_params
+    params.require(:genre).permit(:name, :image)
+  end
+
+  def order
+    params.fetch(:order, :asc)
+  end
 end
