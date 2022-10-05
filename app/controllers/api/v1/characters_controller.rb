@@ -11,12 +11,12 @@ class Api::V1::CharactersController < ApplicationController
   # GET /characters
   def index
     @characters = (apply_scopes(Character.limit(limit).offset(params[:offset]))).order(created_at: order_params)
-    render json: @characters
+    render json: CharactersSerializer.new(@characters, {params: { context: { index: true }}}).serializable_hash.to_json
   end
 
   # GET /characters/1
   def show
-    render json: @character
+    render json: CharactersSerializer.new(@character, {params: { context: { index: false }}}).serializable_hash.to_json
   end
 
   # POST /characters
@@ -24,7 +24,7 @@ class Api::V1::CharactersController < ApplicationController
     @character = Character.new(character_params)
 
     if @character.save
-      render json: @character, status: :created
+      render json: CharactersSerializer.new(@character, {params: { context: { index: false }}}).serializable_hash.to_json, status: :created
     else
       render json: @character.errors, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class Api::V1::CharactersController < ApplicationController
   # PATCH/PUT /characters/1
   def update
     if @character.update(character_params)
-      render json: @character
+      render json: CharactersSerializer.new(@character, {params: { context: { index: false }}}).serializable_hash.to_json
     else
       render json: @character.errors, status: :unprocessable_entity
     end
@@ -42,6 +42,7 @@ class Api::V1::CharactersController < ApplicationController
   # DELETE /characters/1
   def destroy
     @character.destroy
+    render json: {'msg': 'Character deleted'}
   end
 
   private
@@ -49,11 +50,13 @@ class Api::V1::CharactersController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_character
     @character = Character.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: {error: "No se encuentra el personaje con ID: '#{params[:id]}'"}
   end
 
   # Only allow a list of trusted parameters through.
   def character_params
-    params.require(:character).permit(:name, :age, :weight, :history, :image)
+    params.permit(:name, :age, :weight, :history, :image, {:production_ids => []})
   end
 
   def limit

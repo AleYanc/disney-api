@@ -19,8 +19,10 @@ class Production < ApplicationRecord
 
 
   def allowed_score
-    if score > 5 || score < 1
-      errors.add(:score, 'Score must be between 1 and 5')
+    if !score.nil?
+      if score > 5 || score < 1
+        errors.add(:score, 'Score must be between 1 and 5')
+      end
     end
   end
 end

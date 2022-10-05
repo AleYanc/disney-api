@@ -97,10 +97,10 @@ RSpec.configure do |config|
     token = AuthTokenService.call(user.id)
     @valid_headers = {"Authorization" => "Token token=#{token}"}
     @invalid_headers = {"Authorization" => "Token token=#{token}ASDF"}
-    @genre = create(:genre)
+    @genre = create(:genre, name: 'Aventura')
     @production = create(:rand_production, title: 'Cars', score: 5)
-    @production = create(:rand_production, title: 'Cars 2', score: 3)
-    @production = create(:rand_production, title: 'Cars 3', score: 5)
+    @production2 = create(:rand_production, title: 'Cars 2', score: 3)
+    @production3 = create(:rand_production, title: 'Cars 3', score: 5)
     @ch1 = create(:random_character, name: 'Rayo McQueen', age: 30, weight: 600.7)
     @ch2 = create(:random_character, name: 'Mate', age: 30, weight: 700.99)
   end

@@ -22,7 +22,7 @@ class Api::V1::GenresController < ApplicationController
     @genre = Genre.new(genre_params)
 
     if @genre.save
-      render json: @genre, status: :created
+      render json: GenresSerializer.new(@genre).serializable_hash.to_json, status: :created
     else
       render json: @genre.errors, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class Api::V1::GenresController < ApplicationController
   # PATCH/PUT /genres/1
   def update
     if @genre.update(genre_params)
-      render json: @genre
+      render json: GenresSerializer.new(@genre).serializable_hash.to_json
     else
       render json: @genre.errors, status: :unprocessable_entity
     end
@@ -57,7 +57,7 @@ class Api::V1::GenresController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def genre_params
-    params.require(:genre).permit(:name, :image)
+    params.permit(:name, :image)
   end
 
   def order

@@ -1,6 +1,6 @@
 class Api::V1::ProductionsController < ApplicationController
   before_action :set_production, only: [:show, :update, :destroy]
-  before_action :authenticate_user, only: [:create, :upate, :destroy]
+  before_action :authenticate_user
   MAX_PAGINATION_LIMIT = 10
 
   has_scope :title
@@ -11,12 +11,12 @@ class Api::V1::ProductionsController < ApplicationController
   def index
     @productions = (apply_scopes(Production.limit(limit).offset(params[:offset]))).order(created_at: order)
 
-    render json: @productions
+    render json: ProductionsSerializer.new(@productions, {params: { context: { index: true }}}).serializable_hash.to_json
   end
 
   # GET /productions/1
   def show
-    render json: @production
+    render json: ProductionsSerializer.new(@production, {params: { context: { index: false }}}).serializable_hash.to_json
   end
 
   # POST /productions
@@ -24,7 +24,7 @@ class Api::V1::ProductionsController < ApplicationController
     @production = Production.new(production_params)
 
     if @production.save
-      render json: @production, status: :created
+      render json: ProductionsSerializer.new(@production, {params: { context: { index: false }}}).serializable_hash.to_json, status: :created
     else
       render json: @production.errors, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class Api::V1::ProductionsController < ApplicationController
   # PATCH/PUT /productions/1
   def update
     if @production.update(production_params)
-      render json: @production
+      render json: ProductionsSerializer.new(@production, {params: { context: { index: false }}}).serializable_hash.to_json
     else
       render json: @production.errors, status: :unprocessable_entity
     end
@@ -42,15 +42,18 @@ class Api::V1::ProductionsController < ApplicationController
   # DELETE /productions/1
   def destroy
     @production.destroy
+    render json: {'msg': 'Production deleted'}
   end
 
   private
     def set_production
       @production = Production.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: {error: "No se encuentra la produccion con ID: '#{params[:id]}'"}
     end
 
     def production_params
-      params.require(:production).permit(:title, :score, :released_date, :image)
+      params.permit(:title, :score, :released_date, :image, {:character_ids => []}, {:genre_ids => []})
     end
 
     def limit

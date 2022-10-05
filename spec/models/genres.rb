@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Genre, :type => :model do
   before(:all) do
-    @genre = build(:genre)
+    @genre = build(:random_genre)
   end
 
   it 'is valid with valid attributes' do

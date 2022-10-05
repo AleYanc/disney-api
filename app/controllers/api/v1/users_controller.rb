@@ -3,14 +3,12 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
-
-    render json: @users
+    # Nada para hacer aqui
   end
 
   # GET /users/1
   def show
-    render json: @user
+    # Nada para hacer aqui
   end
 
   # POST /users
@@ -18,7 +16,9 @@ class Api::V1::UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: :created
+      UserSignUpMailer.send_signup_email(@user).deliver
+      @token = AuthTokenService.call(@user.id)
+      render json: {'msg': 'Registrado con exito', 'email': @user.email, 'first-token': "#{@token}"}, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -26,26 +26,17 @@ class Api::V1::UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
-    if @user.update(user_params)
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
+    # Nada para hacer aqui
   end
 
   # DELETE /users/1
   def destroy
-    @user.destroy
+    # Nada para hacer aqui
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.require(:user).permit(:email, :password_digest)
-    end
+  def user_params
+    params.permit(:email, :password)
+  end
 end
