@@ -1,19 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "Characters", type: :request do
-  before(:each) do
-    @user = create(:base)
-    @token = AuthTokenService.call(1)
-    @valid_headers = {"Authorization" => "Token token=#{@token}"}
-    @invalid_headers = {"Authorization" => "Token token=#{@token}ASDF"}
-    @ch1 = create(:character)
-    @ch2 = create(:character)
-  end
-
-  after(:each) do
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
   describe "GET characters" do
     it "returns character index" do
       get '/api/v1/characters', headers: @valid_headers
@@ -56,7 +43,7 @@ RSpec.describe "Characters", type: :request do
       get '/api/v1/characters', headers: @valid_headers, params: {:by_production => 1}
       expect(response).to have_http_status(:success)
       parsed = JSON.parse(response.body)
-      expect(parsed.length).to eq(1) #rayo esta relacionado a la produccion 'Cars' cuyo ID es 1, hubo un error al momento de ejecutar la creacion de personaje y mate no quedo asociado
+      expect(parsed.length).to eq(2) #rayo y mate estan asociados a la primer produccion que se crea cuyo ID siempre sera 1 en este contexto
     end
   end
 
@@ -82,6 +69,30 @@ RSpec.describe "Characters", type: :request do
         }
       }
       expect(response).to have_http_status(:created)
+    end
+
+    it "returns error when one or more attributes are missing" do
+      post "/api/v1/characters", headers: @valid_headers, params: {
+        character: {
+          name: nil, age: @random.age, weight: @random.weight, history: @random.history, image: @random.image, production: @random.productions
+        }
+      }
+      expect(response).to have_http_status(422)
+    end
+  end
+
+  describe "DELETE /characters" do
+    it "deletes character" do
+      expect {
+        delete "/api/v1/characters/#{@ch1.id}", headers: @valid_headers
+      }
+      .to change {Character.count}.by(-1)
+    end
+
+    it "returns error when an invalid ID is passed" do
+      expect {
+        delete "/api/v1/characters/6745", headers: @valid_headers
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

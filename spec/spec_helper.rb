@@ -44,8 +44,8 @@ RSpec.configure do |config|
   # triggering implicit auto-inclusion in groups with matching metadata.
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
-# The settings below are suggested to provide a good initial experience
-# with RSpec, but feel free to customize to your heart's content.
+  # The settings below are suggested to provide a good initial experience
+  # with RSpec, but feel free to customize to your heart's content.
 =begin
   # This allows you to limit a spec run to individual examples or groups
   # you care about by tagging them with `:focus` metadata. When nothing
@@ -91,4 +91,21 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+
+  config.before(:all) do
+    user = FactoryBot.create(:user)
+    token = AuthTokenService.call(user.id)
+    @valid_headers = {"Authorization" => "Token token=#{token}"}
+    @invalid_headers = {"Authorization" => "Token token=#{token}ASDF"}
+    @genre = create(:genre)
+    @production = create(:rand_production, title: 'Cars', score: 5)
+    @production = create(:rand_production, title: 'Cars 2', score: 3)
+    @production = create(:rand_production, title: 'Cars 3', score: 5)
+    @ch1 = create(:random_character, name: 'Rayo McQueen', age: 30, weight: 600.7)
+    @ch2 = create(:random_character, name: 'Mate', age: 30, weight: 700.99)
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
 end

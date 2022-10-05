@@ -1,9 +1,15 @@
 class Api::V1::ProductionsController < ApplicationController
   before_action :set_production, only: [:show, :update, :destroy]
+  before_action :authenticate_user, only: [:create, :upate, :destroy]
+  MAX_PAGINATION_LIMIT = 10
+
+  has_scope :title
+  has_scope :genre
+  has_scope :score
 
   # GET /productions
   def index
-    @productions = Production.all
+    @productions = (apply_scopes(Production.limit(limit).offset(params[:offset]))).order(created_at: order)
 
     render json: @productions
   end
@@ -18,7 +24,7 @@ class Api::V1::ProductionsController < ApplicationController
     @production = Production.new(production_params)
 
     if @production.save
-      render json: @production, status: :created location: @user
+      render json: @production, status: :created
     else
       render json: @production.errors, status: :unprocessable_entity
     end
@@ -39,13 +45,19 @@ class Api::V1::ProductionsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_production
       @production = Production.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def production_params
       params.require(:production).permit(:title, :score, :released_date, :image)
+    end
+
+    def limit
+      [params.fetch(:limit, MAX_PAGINATION_LIMIT).to_i].min
+    end
+
+    def order
+      params.fetch(:order, :asc)
     end
 end

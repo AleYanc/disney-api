@@ -5,11 +5,12 @@ class Production < ApplicationRecord
 
   validates :title, presence: true, uniqueness: true
   validates :released_date, presence: true
-  validates :score, presence: true, uniqueness: true
+  validates :score, presence: true
 
   validate :allowed_score
 
   scope :title, -> title {where("title LIKE ?", "%" + title + "%")}
+  scope :score, -> score {where("score = ?", score)}
 
   scope :genre, -> genres {    
     genre_array = (genres.split(',')).map(&:to_i) 
