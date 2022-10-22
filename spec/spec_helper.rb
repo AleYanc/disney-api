@@ -93,8 +93,8 @@ RSpec.configure do |config|
 =end
 
   config.before(:all) do
-    user = FactoryBot.create(:user)
-    token = AuthTokenService.call(user.id)
+    @user = FactoryBot.create(:user)
+    token = AuthTokenService.call(@user.id)
     @valid_headers = {"Authorization" => "Token token=#{token}"}
     @invalid_headers = {"Authorization" => "Token token=#{token}ASDF"}
     @genre = create(:genre, name: 'Aventura')
